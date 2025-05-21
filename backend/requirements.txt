@@ -1,0 +1,12 @@
+fastapi>=0.115.12
+uvicorn>=0.34.2
+python-dotenv>=1.1.0
+email-validator>=2.2.0
+
+# Database dependencies
+beanie>=1.29.0
+
+# JWT and hashing dependencies
+passlib==1.7.4
+PyJWT==2.10.1
+python-multipart==0.0.20

@@ -1,0 +1,21 @@
+services:
+  db:
+    image: 'mongo'
+    ports:
+      - '27017:27017'
+    volumes:
+      - bank_data:/data/db
+    env_file:
+      - ./env/mongo.env
+  backend:
+    container_name: 'backend'
+    build: ./backend
+    ports:
+      - '80:80'
+    env_file:
+      - ./env/backend.env
+    depends_on:
+      - db
+
+volumes:
+  bank_data:
