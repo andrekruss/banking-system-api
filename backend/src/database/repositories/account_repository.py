@@ -35,6 +35,20 @@ class AccountRepository:
             created_at=str(account.created_at)
         )
     
+    async def update_balance(self, account_id: PydanticObjectId, balance: float) -> AccountDTO:
+
+        account = await Account.find_one(Account.id == account_id)
+    
+        if not account:
+            raise AccountNotFoundError()
         
+        account.balance = balance
+        await account.save()
+        
+        return AccountDTO(
+            id=str(account.id),
+            balance=account.balance,
+            created_at=str(account.created_at)
+        )
         
         

@@ -9,6 +9,7 @@ from src.database.models.account import Account
 from src.database.models.payment import Payment
 from src.database.models.user import User
 from src.routers.auth_router import auth_router
+from src.routers.payment_router import payment_router
 from src.routers.user_router import user_router
 
 load_dotenv()
@@ -30,3 +31,4 @@ app = FastAPI(lifespan=lifespan)
 
 app.include_router(user_router)
 app.include_router(auth_router)
+app.include_router(payment_router)

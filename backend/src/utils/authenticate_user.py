@@ -1,7 +1,7 @@
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
-from utils.jwt import decode_jwt_token
-from database.models.user import User
+from src.utils.jwt import decode_jwt_token
+from src.database.models.user import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
