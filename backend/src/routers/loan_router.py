@@ -1,3 +1,4 @@
+from typing import List
 from beanie import PydanticObjectId
 from fastapi import APIRouter, Depends, HTTPException, status
 
@@ -46,3 +47,15 @@ async def create_loan(create_loan_dto: CreateLoanDTO, user: User = Depends(get_c
             detail="Internal server error."
         )
     
+@loan_router.get(path="/list", status_code=status.HTTP_200_OK, response_model=List[LoanDTO])
+async def list_loans(user: User = Depends(get_current_user)):
+
+    try:
+        loan_repo = LoanRepository()
+        loans_dtos = await loan_repo.list_by_user(user.id)
+        return loans_dtos
+    except Exception as err:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error."
+        )
