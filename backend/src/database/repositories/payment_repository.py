@@ -1,3 +1,4 @@
+from typing import List
 from beanie import PydanticObjectId
 from datetime import datetime, timezone
 
@@ -26,5 +27,21 @@ class PaymentRepository:
             amount=payment.amount,
             created_at=str(payment.created_at)
         )
+    
+    async def list_by_user(self, user_id: PydanticObjectId, account_id: PydanticObjectId) -> List[PaymentDTO]:
+
+        payments = await Payment.find(Payment.user_id == user_id, Payment.account_id == account_id).to_list()
+
+        return [ 
+            PaymentDTO(
+                account_id=str(payment.account_id),
+                payment_type=payment.payment_type,
+                target_identifier=payment.target_identifier,
+                amount=payment.amount,
+                created_at=payment.created_at.isoformat()
+            )
+            for payment in payments
+        ]
+        
 
         

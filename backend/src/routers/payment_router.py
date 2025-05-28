@@ -1,3 +1,4 @@
+from typing import List
 from beanie import PydanticObjectId
 from fastapi import APIRouter, Depends, HTTPException, status
 
@@ -53,6 +54,31 @@ async def create_payment(create_payment_dto: CreatePaymentDTO, user: User = Depe
             detail=str(err)
         ) 
     except Exception as error:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error."
+        )
+    
+@payment_router.get(path="/list", status_code=status.HTTP_200_OK, response_model=List[PaymentDTO])
+async def list_payments(user: User = Depends(get_current_user)):
+
+    try:
+        account_repo = AccountRepository()
+        account_dto = await account_repo.get_by_user_id(user.id)
+
+        payment_repo = PaymentRepository()
+        payments_dtos = await payment_repo.list_by_user(
+            user_id=user.id,
+            account_id=PydanticObjectId(account_dto.id)
+        )
+
+        return payments_dtos
+    except AccountNotFoundError as err:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(err)
+        )
+    except Exception as err:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Internal server error."
